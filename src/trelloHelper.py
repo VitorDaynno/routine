@@ -21,3 +21,6 @@ class TrelloHelper:
 
     def delete_cards(self, card_id):
         self.trello.cards.delete(card_id)
+
+    def create_card(self, name, list_id, desc, pos, date):
+        self.trello.cards.new(name, list_id, desc, pos, date)

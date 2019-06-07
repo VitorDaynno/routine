@@ -1,5 +1,6 @@
 from .trelloHelper import TrelloHelper
 from .fileHelper import FileHelper
+from datetime import datetime
 
 
 class Routine:
@@ -30,4 +31,15 @@ class Routine:
         self.file.write(list["name"] + "," + str(percentage))
 
     def import_routine(self, file):
-        print(file)
+        self.file.open(file, "r")
+        lines = self.file.get_lines()
+        for line in lines:
+            card = line.split(",")
+            self.import_day(card)
+        self.file.close()
+
+    def import_day(self, card):
+        lists = self.trello.get_lists(self.board_id)
+        for list in lists:
+            if card[0].lower() == list["name"].lower():
+                self.trello.create_card(card[1], list["id"], None, None, None)

@@ -12,3 +12,6 @@ if __name__ == "__main__":
         action = sys.argv[1]
         if action == "process":
             routine.process()
+        elif action == "import":
+            file = sys.argv[2]
+            routine.import_routine(file)

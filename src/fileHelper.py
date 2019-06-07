@@ -11,3 +11,6 @@ class FileHelper:
 
     def close(self):
         self.file.close()
+
+    def get_lines(self):
+        return self.file.readlines()
