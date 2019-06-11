@@ -1,6 +1,6 @@
 from .trelloHelper import TrelloHelper
 from .fileHelper import FileHelper
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 
 class Routine:
@@ -42,4 +42,16 @@ class Routine:
         lists = self.trello.get_lists(self.board_id)
         for list in lists:
             if card[0].lower() == list["name"].lower():
-                self.trello.create_card(card[1], list["id"], None, None, None)
+                hour = card[2].split(":")
+                target_date = self.calculate_date(card[0])
+                reference_date = datetime(target_date.year, target_date.month, target_date.day, int(hour[0]), int(hour[1]))
+                print(reference_date)
+                self.trello.create_card(card[1], list["id"], None, None, reference_date)
+
+    def calculate_date(self, day):
+        days_week = ["segunda", "terça", "quarta", "quinta", "sexta", "sabado", "domingo"]
+        today = date.today()
+        today_num = today.weekday()
+        days = (days_week.index(day) - today_num + 7) % 7
+        target_day = today + timedelta(days=days)
+        return target_day
