@@ -1,3 +1,6 @@
+from pytz import timezone
+import pytz
+
 from .trelloHelper import TrelloHelper
 from .fileHelper import FileHelper
 from datetime import date, datetime, timedelta
@@ -45,6 +48,7 @@ class Routine:
                 hour = card[2].split(":")
                 target_date = self.calculate_date(card[0])
                 reference_date = datetime(target_date.year, target_date.month, target_date.day, int(hour[0]), int(hour[1]))
+                reference_date = self._to_UTC(reference_date)
                 self.trello.create_card(card[1], list["id"], None, None, reference_date)
 
     def calculate_date(self, day):
@@ -54,3 +58,7 @@ class Routine:
         days = (days_week.index(day) - today_num + 7) % 7
         target_day = today + timedelta(days=days)
         return target_day
+
+    def _to_UTC(self, date):
+        tz = timezone('America/Sao_Paulo')
+        return tz.normalize(tz.localize(date)).astimezone(pytz.utc)
